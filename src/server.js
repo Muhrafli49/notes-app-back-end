@@ -2,6 +2,7 @@ const Hapi = require('@hapi/hapi');
 const notes = require('./api/notes');
 const NotesService = require('./services/inMemory/postgres/NotesService');
 const NotesValidator = require('./validator/notes');
+const ClientError = require('./exceptions/ClientError');
 require('dotenv').config();
 
 // eslint-disable-next-line no-unused-vars
