@@ -65,7 +65,7 @@ class NotesService {
     }
 
 
-    async deleteByNoteId(id) {
+    async deleteNoteById(id) {
         const query = {
             text: 'DELETE FROM notes WHERE id = $1 RETURNING id',
             values: [id],
@@ -73,7 +73,7 @@ class NotesService {
 
         const result = await this._pool.query(query);
 
-        if(!result.rows.length) {
+        if (!result.rows.length) {
             throw new NotFoundError('Catatan gagal dihapus. Id tidak ditemukan');
         }
     }
