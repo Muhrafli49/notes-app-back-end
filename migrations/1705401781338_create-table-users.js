@@ -13,6 +13,10 @@ exports.up = pgm => {
             unique: true,
             notNull: true,
         },
+        password: {  // Tambahkan kolom password
+            type: 'TEXT',
+            notNull: true,
+        },
         fullname: {
             type: 'TEXT',
             notNull: true,
