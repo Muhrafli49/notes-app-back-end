@@ -22,14 +22,19 @@ const AuthenticationsService = require('./services/inMemory/postgres/Authenticat
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
-
+// collaborations
+const collaborations = require('./api/collaborations');
+const CollaborationsService = require('./services/inMemory/postgres/CollaborationsService');
+const CollaborationsValidator = require('./validator/collaborations');
 
 // eslint-disable-next-line no-unused-vars
 const init = async () => {
+    const collaborationsService = new CollaborationsService();
     const notesService = new NotesService();
     const usersService = new UsersService();
     const authenticationsService = new AuthenticationsService();
-    
+
+
     const server = Hapi.server({
         port: process.env.PORT,
         host: process.env.HOST,
@@ -85,25 +90,16 @@ const init = async () => {
                 tokenManager: TokenManager,
                 validator: AuthenticationsValidator,
             },
-        }
-    ]);
-
-    server.auth.strategy('notesapp_jwt', 'jwt', {
-        keys: process.env.ACCESS_TOKEN_KEY,
-        verify: {
-            aud: false,
-            iss: false,
-            sub: false,
-            maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+        },
+        {
+            plugin: collaborations,
+            options: {
+                collaborationsService,
+                notesService,
+                validator: CollaborationsValidator,
             },
-            validate: (artifacts) => ({
-                isValid: true,
-                credentials: {
-                    id: artifacts.decoded.payload.id,
-                },
-        }),
-    });
-
+        },
+    ]);
 
     server.ext('onPreResponse', (request, h) => {
             // mendapatkan konteks response dari request
